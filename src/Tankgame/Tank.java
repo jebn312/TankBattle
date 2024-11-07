@@ -6,15 +6,13 @@ public class Tank {
     private int direction;
     private int speed = 1;
 
-    public int getSpeed() {
-        return speed;
-    }
-
     public void setSpeed(int speed) {
         this.speed = speed;
     }
 
     public void move() {
+        //800 * 500
+        if(y <= 0 && direction == 0 || direction == 1 && y + 50 >= 500 || direction == 2 && x - 10 <= 0 || direction == 3 && x + 65 >= 800) return;
         switch (direction) {
             case 0:
                 y -= speed;
@@ -48,15 +46,8 @@ public class Tank {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
 }
