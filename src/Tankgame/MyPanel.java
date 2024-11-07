@@ -18,6 +18,17 @@ public class MyPanel extends JPanel implements KeyListener {
         for (int i = 0; i < enemySize; i++) {
             enemies.add(new Enemy(100 * (i + 1), 0));
         }
+
+        new Thread(() -> {
+            while (true) {
+                repaint();
+                try {
+                    Thread.sleep(600);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     @Override
@@ -27,6 +38,13 @@ public class MyPanel extends JPanel implements KeyListener {
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 1);
         for (Enemy e : enemies) {
             drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+        }
+        if (!hero.bullets.isEmpty()) {
+            for (Bullet bullet : hero.bullets) {
+                if (bullet.isLive()) {
+                    g.fill3DRect(bullet.getX(), bullet.getY(), 2, 2, false);
+                } else hero.bullets.remove(bullet);
+            }
         }
     }
 
@@ -98,6 +116,10 @@ public class MyPanel extends JPanel implements KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_D) {
             hero.setDirection(3);
             hero.move();
+        } else if (e.getKeyCode() == KeyEvent.VK_J) {
+            hero.shot();
+        } else if(e.getKeyCode() == KeyEvent.VK_G) {
+
         }
         repaint();
     }
