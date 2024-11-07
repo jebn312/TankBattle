@@ -40,9 +40,10 @@ public class MyPanel extends JPanel implements KeyListener {
             drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
         }
         if (!hero.bullets.isEmpty()) {
-            for (Bullet bullet : hero.bullets) {
+            for (int i = 0; i < hero.bullets.size(); i++) {
+                Bullet bullet = hero.bullets.get(i);
                 if (bullet.isLive()) {
-                    g.fill3DRect(bullet.getX(), bullet.getY(), 2, 2, false);
+                    g.fill3DRect(bullet.getX(), bullet.getY(), 3, 3, false);
                 } else hero.bullets.remove(bullet);
             }
         }
