@@ -1,6 +1,7 @@
 package Tankgame;
 
 public class Enemy extends Tank{
+    boolean isLive = true;
     public Enemy(int x, int y) {
        super(x, y);
 //       Random r = new Random();

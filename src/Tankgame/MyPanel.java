@@ -36,14 +36,24 @@ public class MyPanel extends JPanel implements KeyListener {
         super.paint(g);
         g.fillRect(0, 0, 800, 550);
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 1);
-        for (Enemy e : enemies) {
-            drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+        synchronized (this) {
+            for (int i = 0; i < enemies.size(); i++) {
+                Enemy e = enemies.get(i);
+                if (e.isLive) drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+                else enemies.remove(e);
+            }
         }
+
         if (!hero.bullets.isEmpty()) {
             for (int i = 0; i < hero.bullets.size(); i++) {
                 Bullet bullet = hero.bullets.get(i);
                 if (bullet.isLive()) {
                     g.fill3DRect(bullet.getX(), bullet.getY(), 3, 3, false);
+                    synchronized (this) {
+                        for (Enemy e : enemies) {
+                            hitTank(bullet, enemies.get(i));
+                        }
+                    }
                 } else hero.bullets.remove(bullet);
             }
         }
@@ -99,6 +109,20 @@ public class MyPanel extends JPanel implements KeyListener {
         }
     }
 
+    public void hitTank(Bullet b, Enemy e) {
+        if (e.getDirection() == 0 || e.getDirection() == 1) {
+            if (e.getX() <= b.getX() && e.getX() + 40 >= b.getX() && e.getY() <= b.getY() && e.getY() + 60 >= b.getY()) {
+                e.isLive = false;
+                b.setLive(false);
+            }
+        } else {
+            if (e.getX() <= b.getX() && e.getX() + 60 >= b.getX() && e.getY() <= b.getY() && e.getY() + 40 >= b.getY()) {
+                e.isLive = false;
+                b.setLive(false);
+            }
+        }
+    }
+
     @Override
     public void keyTyped(KeyEvent e) {
     }
@@ -119,8 +143,6 @@ public class MyPanel extends JPanel implements KeyListener {
             hero.move();
         } else if (e.getKeyCode() == KeyEvent.VK_J) {
             hero.shot();
-        } else if(e.getKeyCode() == KeyEvent.VK_G) {
-
         }
         repaint();
     }
