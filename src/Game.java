@@ -1,4 +1,4 @@
-package Tankgame;
+import Tankgame.MyPanel;
 
 import javax.swing.*;
 
