@@ -10,9 +10,9 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     Hero hero;
     Vector<Enemy> enemies = new Vector<>();
     Vector<Boob> boobs = new Vector<>();
-    Image boom1 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/images/boom1.png"));
-    Image boom2 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/images/boom2.png"));
-    Image boom3 = Toolkit.getDefaultToolkit().getImage(MyPanel.class.getResource("/images/boom3.png"));
+    ImageIcon boom1 = new ImageIcon(MyPanel.class.getResource("/images/boom1.png"));
+    ImageIcon boom2 = new ImageIcon(MyPanel.class.getResource("/images/boom2.png"));
+    ImageIcon boom3 = new ImageIcon(MyPanel.class.getResource("/images/boom3.png"));
     int enemySize = 3;
 
     public MyPanel() {
@@ -50,10 +50,11 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         Boob b;
         for (int i = 0; i < boobs.size(); i++) {
             b = boobs.get(i);
-            if (b.getLiveTime() > 6) g.drawImage(boom1, b.getX(), b.getY(), 60, 60, this);
-            else if (b.getLiveTime() > 3) g.drawImage(boom2, b.getX(), b.getY(), 60, 60, this);
-            else g.drawImage(boom3, b.getX(), b.getY(), 60, 60, this);
-            if(b.isLive == false) {
+            if (b.getLiveTime() > 6) g.drawImage(boom1.getImage(), b.getX(), b.getY(), 60, 60, this);
+            else if (b.getLiveTime() > 3) g.drawImage(boom2.getImage(), b.getX(), b.getY(), 60, 60, this);
+            else g.drawImage(boom3.getImage(), b.getX(), b.getY(), 60, 60, this);
+            b.lifeDown();
+            if (!b.isLive) {
                 boobs.remove(b);
                 i--;
             }
@@ -123,20 +124,17 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     }
 
     public void hitTank(Bullet b, Enemy e) {
-        Boob boob = new Boob(e.getX(), e.getY());
         if (e.getDirection() == 0 || e.getDirection() == 1) {
             if (e.getX() <= b.getX() && e.getX() + 40 >= b.getX() && e.getY() <= b.getY() && e.getY() + 60 >= b.getY()) {
                 e.isLive = false;
                 b.setLive(false);
-                boobs.add(boob);
-                new Thread(boob).start();
+                boobs.add(new Boob(e.getX(), e.getY()));
             }
         } else {
             if (e.getX() <= b.getX() && e.getX() + 60 >= b.getX() && e.getY() <= b.getY() && e.getY() + 40 >= b.getY()) {
                 e.isLive = false;
                 b.setLive(false);
-                boobs.add(boob);
-                new Thread(boob).start();
+                boobs.add(new Boob(e.getX(), e.getY()));
             }
         }
     }
