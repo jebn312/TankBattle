@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Vector;
 
-public class MyPanel extends JPanel implements KeyListener {
+public class MyPanel extends JPanel implements KeyListener, Runnable {
     Hero hero;
     Vector<Enemy> enemies;
     int enemySize = 3;
@@ -18,17 +18,7 @@ public class MyPanel extends JPanel implements KeyListener {
         for (int i = 0; i < enemySize; i++) {
             enemies.add(new Enemy(100 * (i + 1), 0));
         }
-
-        new Thread(() -> {
-            while (true) {
-                repaint();
-                try {
-                    Thread.sleep(600);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }).start();
+        new Thread(this).start();
     }
 
     @Override
@@ -36,25 +26,30 @@ public class MyPanel extends JPanel implements KeyListener {
         super.paint(g);
         g.fillRect(0, 0, 800, 550);
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 1);
-        synchronized (this) {
-            for (int i = 0; i < enemies.size(); i++) {
-                Enemy e = enemies.get(i);
-                if (e.isLive) drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
-                else enemies.remove(e);
+        drawHeroBullet(g);
+        drawEnemies(g);
+    }
+
+    public void drawEnemies(Graphics g) {
+        Enemy e;
+        for (int i = 0; i < enemies.size(); i++) {
+            e = enemies.get(i);
+            if (e.isLive) drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+            else {
+                enemies.remove(e);
+                i--;
             }
         }
+    }
 
-        if (!hero.bullets.isEmpty()) {
-            for (int i = 0; i < hero.bullets.size(); i++) {
-                Bullet bullet = hero.bullets.get(i);
-                if (bullet.isLive()) {
-                    g.fill3DRect(bullet.getX(), bullet.getY(), 3, 3, false);
-                    synchronized (this) {
-                        for (Enemy e : enemies) {
-                            hitTank(bullet, enemies.get(i));
-                        }
-                    }
-                } else hero.bullets.remove(bullet);
+    public void drawHeroBullet(Graphics g) {
+        Bullet bullet;
+        for (int i = 0; i < hero.bullets.size(); i++) {
+            bullet = hero.bullets.get(i);
+            if (bullet.isLive()) g.fill3DRect(bullet.getX(), bullet.getY(), 3, 3, false);
+            else {
+                hero.bullets.remove(bullet);
+                i--;
             }
         }
     }
@@ -119,6 +114,25 @@ public class MyPanel extends JPanel implements KeyListener {
             if (e.getX() <= b.getX() && e.getX() + 60 >= b.getX() && e.getY() <= b.getY() && e.getY() + 40 >= b.getY()) {
                 e.isLive = false;
                 b.setLive(false);
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            for (int i = 0; i < hero.bullets.size(); i++) {
+                Bullet b = hero.bullets.get(i);
+                for (int j = 0; j < enemies.size(); j++) {
+                    hitTank(b, enemies.get(j));
+                }
+            }
+
+            repaint();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }
