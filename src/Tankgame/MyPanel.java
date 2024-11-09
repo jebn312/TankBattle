@@ -33,6 +33,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 1);
         drawHeroBullet(g);
         drawEnemies(g);
+        g.setColor(Color.cyan);
         drawEnemyBullet(g);
         drawBoom(g);
     }
@@ -146,6 +147,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     }
 
     public void hitTank(Bullet b, Enemy e) {
+        if(!e.isLive) return;
         if (e.getDirection() == 0 || e.getDirection() == 1) {
             if (e.getX() <= b.getX() && e.getX() + 40 >= b.getX() && e.getY() <= b.getY() && e.getY() + 60 >= b.getY()) {
                 e.isLive = false;
