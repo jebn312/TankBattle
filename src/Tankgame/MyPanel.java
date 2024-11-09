@@ -31,6 +31,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         drawTank(hero.getX(), hero.getY(), g, hero.getDirection(), 1);
         drawHeroBullet(g);
         drawEnemies(g);
+        drawEnemyBullet(g);
         drawBoom(g);
     }
 
@@ -38,14 +39,33 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         Enemy e;
         for (int i = 0; i < enemies.size(); i++) {
             e = enemies.get(i);
-            if (e.isLive) drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+            if (e.isLive) {
+                drawTank(e.getX(), e.getY(), g, e.getDirection(), 0);
+                if((int)(Math.random()*100) == 0) e.shot();
+            }
             else {
-                enemies.remove(e);
-                i--;
+                if(e.bullets.size() <= 0) {
+                    enemies.remove(e);
+                    i--;
+                }
             }
         }
     }
 
+    public void drawEnemyBullet(Graphics g) {
+        Bullet bullet;
+        for (int i = 0; i < enemies.size(); i++) {
+
+        for (int j = 0; j < enemies.get(i).bullets.size(); j++) {
+            bullet = enemies.get(i).bullets.get(j);
+            if (bullet.isLive()) g.fill3DRect(bullet.getX(), bullet.getY(), 3, 3, false);
+            else {
+                enemies.get(i).bullets.remove(bullet);
+                j--;
+            }
+        }
+        }
+    }
     public void drawBoom(Graphics g) {
         Boob b;
         for (int i = 0; i < boobs.size(); i++) {
