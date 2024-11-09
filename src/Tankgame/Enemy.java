@@ -7,7 +7,7 @@ public class Enemy extends Tank implements Runnable {
     public Enemy(int x, int y) {
         super(x, y);
         setDirection((int) (Math.random() * 10) % 4);
-        setSpeed(10);
+        setSpeed(4);
     }
 
     @Override
