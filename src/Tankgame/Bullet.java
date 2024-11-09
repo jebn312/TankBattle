@@ -36,7 +36,7 @@ public class Bullet implements Runnable {
                 break;
             }
             try {
-                Thread.sleep(600);
+                Thread.sleep(50);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
