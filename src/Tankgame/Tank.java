@@ -5,6 +5,7 @@ public class Tank {
     private int y;
     private int direction;
     private int speed = 1;
+    private int lifeBlood = 100;
 
     public void setSpeed(int speed) {
         this.speed = speed;
@@ -29,8 +30,7 @@ public class Tank {
     }
 
     public boolean isWall() {
-        if (y <= 0 && direction == 0 || direction == 1 && y + 50 >= 500 || direction == 2 && x - 10 <= 0 || direction == 3 && x + 65 >= 800) return true;
-        return false;
+        return y <= 0 && direction == 0 || direction == 1 && y + 50 >= 500 || direction == 2 && x - 10 <= 0 || direction == 3 && x + 65 >= 800;
     }
 
     public int getDirection() {
@@ -54,4 +54,20 @@ public class Tank {
         return y;
     }
 
+    protected void setXY(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public void lifeDown() {
+        lifeBlood -= (int) (Math.random() * 30) + 3;
+    }
+
+    public void reLifeBlood() {
+        lifeBlood = 100;
+    }
+
+    public int getLifeBlood() {
+        return lifeBlood;
+    }
 }

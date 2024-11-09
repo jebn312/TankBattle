@@ -1,11 +1,11 @@
 package Tankgame;
 
-public class Boob implements Runnable{
-    private int x;
-    private int y;
+public class Bomb implements Runnable{
+    final private int x;
+    final private int y;
     private int liveTime = 9;
     boolean isLive = true;
-    public Boob(int x, int y) {
+    public Bomb(int x, int y) {
         this.x = x;
         this.y = y;
     }
