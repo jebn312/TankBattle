@@ -5,6 +5,7 @@ import java.util.Vector;
 public class Hero extends Tank {
     Vector<Bullet> bullets = new Vector<>();
     Bullet bullet;
+
     public Hero(int x, int y) {
         super(x, y);
     }
@@ -14,4 +15,9 @@ public class Hero extends Tank {
         new Thread(bullet).start();
     }
 
+    @Override
+    public void move() {
+        if(isWall()) return;
+        super.move();
+    }
 }

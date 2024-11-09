@@ -19,7 +19,9 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         hero = new Hero(100, 100);
         hero.setSpeed(10);
         for (int i = 0; i < enemySize; i++) {
-            enemies.add(new Enemy(100 * (i + 1), 0));
+            Enemy e = new Enemy(100 * (i + 1), 0);
+            enemies.add(e);
+            new Thread(e).start();
         }
         new Thread(this).start();
     }
@@ -144,8 +146,8 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         while (true) {
             for (int i = 0; i < hero.bullets.size(); i++) {
                 Bullet b = hero.bullets.get(i);
-                for (int j = 0; j < enemies.size(); j++) {
-                    hitTank(b, enemies.get(j));
+                for (Enemy enemy : enemies) {
+                    hitTank(b, enemy);
                 }
             }
 

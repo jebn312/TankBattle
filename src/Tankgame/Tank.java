@@ -12,7 +12,6 @@ public class Tank {
 
     public void move() {
         //800 * 500
-        if(y <= 0 && direction == 0 || direction == 1 && y + 50 >= 500 || direction == 2 && x - 10 <= 0 || direction == 3 && x + 65 >= 800) return;
         switch (direction) {
             case 0:
                 y -= speed;
@@ -27,6 +26,11 @@ public class Tank {
                 x += speed;
                 break;
         }
+    }
+
+    public boolean isWall() {
+        if (y <= 0 && direction == 0 || direction == 1 && y + 50 >= 500 || direction == 2 && x - 10 <= 0 || direction == 3 && x + 65 >= 800) return true;
+        return false;
     }
 
     public int getDirection() {

@@ -1,11 +1,54 @@
 package Tankgame;
 
-public class Enemy extends Tank{
+public class Enemy extends Tank implements Runnable {
     boolean isLive = true;
+    int directionTime;
+
     public Enemy(int x, int y) {
-       super(x, y);
-//       Random r = new Random();
-//        setDirection(r.nextInt(3));
-        setDirection((int)(Math.random()*10) % 4);
+        super(x, y);
+        setDirection((int) (Math.random() * 10) % 4);
+        setSpeed(10);
+    }
+
+    @Override
+    public void move() {
+        directionTime = (int) (Math.random() * 20) + 7;
+        for (int i = 0; i < directionTime; i++) {
+            if (isWall()) {
+                int direct;
+                switch (getDirection()) {
+                    case 0:
+                        while ((direct = (int) (Math.random() * 4)) == 0) ;
+                        setDirection(direct);
+                        break;
+                    case 1:
+                        while ((direct = (int) (Math.random() * 4)) == 1) ;
+                        setDirection(direct);
+                        break;
+                    case 2:
+                        while ((direct = (int) (Math.random() * 4)) == 2) ;
+                        setDirection(direct);
+                        break;
+                    case 3:
+                        while ((direct = (int) (Math.random() * 4)) == 3) ;
+                        setDirection(direct);
+                        break;
+                }
+            }
+            super.move();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    }
+
+    @Override
+    public void run() {
+        while (isLive) {
+            move();
+        }
     }
 }
