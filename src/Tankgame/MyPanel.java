@@ -178,15 +178,21 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         if (!e.isLive) return;
         if (e.getDirection() == 0 || e.getDirection() == 1) {
             if (e.getX() <= b.getX() && e.getX() + 40 >= b.getX() && e.getY() <= b.getY() && e.getY() + 60 >= b.getY()) {
-                e.isLive = false;
                 b.setLive(false);
-                boobs.add(new Bomb(e.getX(), e.getY()));
+                e.lifeDown();
+                if(e.getLifeBlood() <= 0) {
+                    e.isLive = false;
+                    boobs.add(new Bomb(e.getX(), e.getY()));
+                }
             }
         } else {
             if (e.getX() <= b.getX() && e.getX() + 60 >= b.getX() && e.getY() <= b.getY() && e.getY() + 40 >= b.getY()) {
-                e.isLive = false;
                 b.setLive(false);
-                boobs.add(new Bomb(e.getX(), e.getY()));
+                e.lifeDown();
+                if(e.getLifeBlood() <= 0) {
+                    e.isLive = false;
+                    boobs.add(new Bomb(e.getX(), e.getY()));
+                }
             }
         }
     }
@@ -240,7 +246,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             hero.setDirection(3);
             hero.move();
         } else if (e.getKeyCode() == KeyEvent.VK_J) {
-            hero.shot();
+            if(hero.bullets.size() <= 6) hero.shot();
         }
         repaint();
     }
