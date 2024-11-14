@@ -2,24 +2,9 @@ package Tankgame;
 
 import java.util.Vector;
 
-public class Hero extends Tank implements Runnable {
+public class Hero extends Tank {
     Vector<Bullet> bullets = new Vector<>();
     Bullet bullet;
-    boolean isLive = true;
-    int ifW;
-
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        reset();
-        reLifeBlood();
-        isLive = true;
-    }
-
     public Hero(int x, int y) {
         super(x, y);
     }
@@ -36,10 +21,5 @@ public class Hero extends Tank implements Runnable {
         bullets.add(bullet);
         new Thread(bullet).start();
     }
-
-    public void reset() {
-        setXY(100, 100);
-    }
-
 
 }

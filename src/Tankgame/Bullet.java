@@ -90,7 +90,6 @@ public class Bullet implements Runnable {
             }
         }
     }
-
     public static void drawHeroBullet(Graphics g, Hero hero) {
         Bullet bullet;
         for (int i = 0; i < hero.bullets.size(); i++) {

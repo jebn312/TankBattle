@@ -8,6 +8,7 @@ public class Tank {
     private int direction;
     private int speed = 1;
     private int lifeBlood = 100;
+    boolean isLive = true;
 
     public Tank(int x, int y) {
         this.x = x;

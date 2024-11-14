@@ -7,7 +7,6 @@ public class Enemy extends Tank implements Runnable {
 
     Vector<Bullet> bullets = new Vector<>();
     Bullet bullet;
-    boolean isLive = true;
     int directionTime;
 
     @Override
