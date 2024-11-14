@@ -6,16 +6,7 @@ public class Hero extends Tank implements Runnable {
     Vector<Bullet> bullets = new Vector<>();
     Bullet bullet;
     boolean isLive = true;
-
-
-    public Hero(int x, int y) {
-        super(x, y);
-    }
-    public void shot() {
-        bullet = new Bullet(getX(), getY(), getDirection(), 10);
-        bullets.add(bullet);
-        new Thread(bullet).start();
-    }
+    int ifW;
 
     @Override
     public void run() {
@@ -29,13 +20,25 @@ public class Hero extends Tank implements Runnable {
         isLive = true;
     }
 
+    public Hero(int x, int y) {
+        super(x, y);
+    }
+
     @Override
     public void move() {
-        if(isWall()) return;
+        if (isWall()) return;
         super.move();
+
     }
+
+    public void shot() {
+        bullet = new Bullet(getX(), getY(), getDirection(), 10);
+        bullets.add(bullet);
+        new Thread(bullet).start();
+    }
+
     public void reset() {
-        setXY(100,100);
+        setXY(100, 100);
     }
 
 

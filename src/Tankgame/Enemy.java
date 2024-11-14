@@ -1,12 +1,21 @@
 package Tankgame;
 
+import java.awt.*;
 import java.util.Vector;
 
 public class Enemy extends Tank implements Runnable {
+
     Vector<Bullet> bullets = new Vector<>();
     Bullet bullet;
     boolean isLive = true;
     int directionTime;
+
+    @Override
+    public void run() {
+        while (isLive) {
+            move();
+        }
+    }
 
     public Enemy(int x, int y) {
         super(x, y);
@@ -41,7 +50,7 @@ public class Enemy extends Tank implements Runnable {
             }
             super.move();
             try {
-                Thread.sleep(50);
+                Thread.sleep(30);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -49,16 +58,26 @@ public class Enemy extends Tank implements Runnable {
 
     }
 
-    @Override
-    public void run() {
-        while (isLive) {
-            move();
-        }
-    }
-
     public void shot() {
         bullet = new Bullet(getX(), getY(), getDirection(), 10);
         bullets.add(bullet);
         new Thread(bullet).start();
     }
+
+    public static void draw(Graphics g, Vector<Enemy> enemies) {
+        Enemy e;
+        for (int i = 0; i < enemies.size(); i++) {
+            e = enemies.get(i);
+            if (e.isLive) {
+                Tank.draw(e.getX(), e.getY(), g, e.getDirection(), 0);
+                if ((int) (Math.random() * 100) == 0) e.shot();
+            } else {
+                if (e.bullets.size() <= 0) {
+                    enemies.remove(e);
+                    i--;
+                }
+            }
+        }
+    }
+
 }
