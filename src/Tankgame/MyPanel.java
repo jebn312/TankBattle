@@ -10,7 +10,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     Hero hero;
     Vector<Enemy> enemies = new Vector<>();
     Vector<Bomb> bombs = new Vector<>();
-    int enemySize = 3;
+    int enemySize = 10;
 
     @Override
     public void run() {
@@ -29,7 +29,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                     for (int i = 0; i < enemies.size(); i++) {
                         for (int j = 0; j < enemies.get(i).bullets.size(); j++) {
                             Bullet b = enemies.get(i).bullets.get(j);
-                            if(hero.isLive)  hitTank(hero, b, bombs);
+                            if (hero.isLive) hitTank(hero, b, bombs);
                         }
                     }
                 }
@@ -41,6 +41,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 throw new RuntimeException(e);
             }
         }
+
     }
 
     public MyPanel() {
@@ -49,6 +50,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         for (int i = 0; i < enemySize; i++) {
             Enemy e = new Enemy(100 * (i + 1), 0);
             enemies.add(e);
+            e.setEnemies(enemies);
             new Thread(e).start();
         }
         new Thread(this).start();
@@ -104,7 +106,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
     public void hitTank(Tank tank, Bullet bullet, Vector<Bomb> bombs) {
         if (!tank.isLive) return;
         if (tank.getDirection() == 0 || tank.getDirection() == 1) {
-            if (tank.getX() <= bullet.getX() && tank.getX() + 50 >= bullet.getX() && tank.getY() <= bullet.getY() && tank.getY() + 60 >= bullet.getY()) {
+            if (tank.getX() <= bullet.getX() && bullet.getX() <= tank.getX() + 40 && tank.getY() <= bullet.getY() && bullet.getY() <= tank.getY() + 60) {
                 bullet.setLive(false);
                 tank.lifeDown();
                 if (tank.getLifeBlood() <= 0) {
@@ -113,7 +115,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                     if (tank instanceof Hero) {
                         new Thread(() -> {
                             int i = 1000;
-                            while(!hero.bullets.isEmpty()) ;
+                            while (!hero.bullets.isEmpty()) ;
                             synchronized (MyPanel.class) {
                                 hero = null;
                             }
@@ -129,7 +131,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
             }
         } else {
-            if (tank.getX() <= bullet.getX() && tank.getX() + 60 >= bullet.getX() && tank.getY() <= bullet.getY() && tank.getY() + 50 >= bullet.getY()) {
+            if(tank.getX() - 10 <= bullet.getX() && bullet.getX() <= tank.getX() + 50 && tank.getY() + 10 <= bullet.getY() && bullet.getY() <= tank.getY() + 50) {
                 bullet.setLive(false);
                 tank.lifeDown();
                 if (tank.getLifeBlood() <= 0) {
@@ -138,7 +140,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                     if (tank instanceof Hero) {
                         new Thread(() -> {
                             int i = 1000;
-                            while(!hero.bullets.isEmpty()) ;
+                            while (!hero.bullets.isEmpty()) ;
                             synchronized (MyPanel.class) {
                                 hero = null;
                             }
