@@ -1,8 +1,9 @@
 package Tankgame;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Tank {
+public class Tank implements Serializable {
     private int x;
     private int y;
     private int direction;
@@ -34,11 +35,16 @@ public class Tank {
 
     public boolean isWall() {
         //上 下 左 右
+        if (x >= 800) {
+            x = 760;
+            return false;
+        }
         return y <= 0 && direction == 0 || direction == 1 && y + 45 >= 500 || direction == 2 && x - 5 <= 0 || direction == 3 && x + 65 >= 800;
     }
 
     public void lifeDown() {
-        lifeBlood -= (int) (Math.random() * 30) + 3;
+//        lifeBlood -= (int) (Math.random() * 30) + 3;
+        lifeBlood -= 100;
     }
 
     public void reLifeBlood() {

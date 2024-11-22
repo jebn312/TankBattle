@@ -1,9 +1,10 @@
 package Tankgame;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Vector;
 
-public class Bullet implements Runnable {
+public class Bullet implements Runnable, Serializable {
     private int x;
     private int y;
     private final int direction;

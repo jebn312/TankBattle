@@ -8,10 +8,9 @@ import java.util.Vector;
 
 public class MyPanel extends JPanel implements KeyListener, Runnable {
     Hero hero;
-    Vector<Enemy> enemies = new Vector<>();
+    public static Vector<Enemy> enemies;
     Vector<Bomb> bombs = new Vector<>();
-    int enemySize = 10;
-
+    int enemySize = 9;
     @Override
     public void run() {
         while (true) {
@@ -44,16 +43,32 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
 
     }
 
+    public MyPanel(int flag) {
+        this();
+        if(flag == 0) {
+            for (int i = 0; i < enemySize; i++) {
+                Enemy e = new Enemy(100 * (i + 1), 0);
+                enemies.add(e);
+                e.setEnemies(enemies);
+                new Thread(e).start();
+            }
+        }
+        else {
+            for (int i = 0; i < enemies.size(); i++) {
+                new Thread(enemies.get(i)).start();
+                Bullet b;
+                for (int j = 0; j < enemies.get(i).bullets.size(); j++) {
+                    b = enemies.get(i).bullets.get(j);
+                    if(b.isLive()) new Thread(b).start();
+                }
+            }
+        }
+        new Thread(this).start();
+    }
     public MyPanel() {
         hero = new Hero(100, 100);
         hero.setSpeed(10);
-        for (int i = 0; i < enemySize; i++) {
-            Enemy e = new Enemy(100 * (i + 1), 0);
-            enemies.add(e);
-            e.setEnemies(enemies);
-            new Thread(e).start();
-        }
-        new Thread(this).start();
+        Recording.setEnemies(enemies);
     }
 
     @Override
@@ -69,6 +84,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         g.setColor(Color.cyan);
         Bullet.drawEnemyBullet(g, enemies);
         Bomb.draw(g, bombs);
+        Recording.draw(g);
     }
 
     @Override
@@ -95,7 +111,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
         } else if (e.getKeyCode() == KeyEvent.VK_J) {
             if (hero.bullets.size() <= 6) hero.shot();
         }
-//        repaint();
     }
 
     @Override
@@ -112,6 +127,7 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 if (tank.getLifeBlood() <= 0) {
                     tank.isLive = false;
                     bombs.add(new Bomb(tank.getX(), tank.getY()));
+                    if (tank instanceof Enemy) Recording.addScore();
                     if (tank instanceof Hero) {
                         new Thread(() -> {
                             int i = 1000;
@@ -131,12 +147,13 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 }
             }
         } else {
-            if(tank.getX() - 10 <= bullet.getX() && bullet.getX() <= tank.getX() + 50 && tank.getY() + 10 <= bullet.getY() && bullet.getY() <= tank.getY() + 50) {
+            if (tank.getX() - 10 <= bullet.getX() && bullet.getX() <= tank.getX() + 50 && tank.getY() + 10 <= bullet.getY() && bullet.getY() <= tank.getY() + 50) {
                 bullet.setLive(false);
                 tank.lifeDown();
                 if (tank.getLifeBlood() <= 0) {
                     tank.isLive = false;
                     bombs.add(new Bomb(tank.getX(), tank.getY()));
+                    if (tank instanceof Enemy) Recording.addScore();
                     if (tank instanceof Hero) {
                         new Thread(() -> {
                             int i = 1000;

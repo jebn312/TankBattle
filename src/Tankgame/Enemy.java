@@ -1,6 +1,7 @@
 package Tankgame;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.sql.Time;
 import java.util.Timer;
 import java.util.Vector;
