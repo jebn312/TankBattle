@@ -40,7 +40,6 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     public MyPanel(int flag) {
@@ -64,6 +63,17 @@ public class MyPanel extends JPanel implements KeyListener, Runnable {
             }
         }
         new Thread(this).start();
+        new Thread(() -> {
+            Audio audio = new Audio();
+            audio.play();
+            int i = 6;
+                try {
+                    Thread.sleep(6000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            audio.end();
+        }).start();
     }
     public MyPanel() {
         hero = new Hero(100, 100);
